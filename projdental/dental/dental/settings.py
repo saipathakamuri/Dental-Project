@@ -9,9 +9,13 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+-
 from pathlib import Path
 import os
+import django_heroku
+import dj_database_url
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'dental.urls'
@@ -123,6 +128,8 @@ STATICFILES_DIRS = [
 ]
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -132,17 +139,10 @@ CONTACT_US_FORM_EMAIL_TO = os.environ.get('DJANGO_EMAIL_TESTING_ACCOUNT_NAME')
 
 # Email settings
 # enable https://myaccount.google.com/lesssecureapps
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'localhost'
 EMAIL_PORT = 587
 EMAIL_HOST_USER ="pathakamurisaikumar79@gmail.com" # os.environ.get('DJANGO_EMAIL_TESTING_ACCOUNT_NAME')
 EMAIL_HOST_PASSWORD = "sai123"#os.environ.get('DJANGO_EMAIL_TESTING_ACCOUNT_PASSWORD')
 EMAIL_USE_TLS = True
 
-# Email settings (Local Testing)
-# python -m smtpd -n -c DebuggingServer localhost:1025
-# run above command from new command line interface - this will set up new server
-# EMAIL_HOST = 'localhost'
-# EMAIL_PORT = 1025
-# EMAIL_HOST_USER = ''
-# EMAIL_HOST_PASSWORD = ' '
-# EMAIL_USE_TLS = False
+django_heroku.settings(locals())
